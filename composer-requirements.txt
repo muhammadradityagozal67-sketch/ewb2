@@ -1,0 +1,2 @@
+Project ini dibuat untuk Laravel 11.x (PHP >= 8.2).
+Tidak ada package tambahan di luar instalasi default Laravel (laravel/laravel).
