@@ -13,21 +13,22 @@ class AuthController extends Controller
         if (Auth::check() && Auth::user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
-        return view('admin.login');
+        return redirect()->route('portal')->with('active_tab', 'admin');
     }
 
     public function adminLogin(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => 'admin'], $request->remember)) {
+            $request->session()->regenerate();
             return redirect()->route('admin.dashboard');
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah, atau Anda bukan admin.'])->withInput();
+        return redirect()->route('portal')->with('error_admin', 'Email atau password salah, atau Anda bukan admin.')->withInput()->with('active_tab', 'admin');
     }
 
     // ===================== ORANG TUA =====================
@@ -36,21 +37,22 @@ class AuthController extends Controller
         if (Auth::check() && Auth::user()->isOrtu()) {
             return redirect()->route('portal.ortu.dashboard');
         }
-        return view('portal.ortu-login');
+        return redirect()->route('portal')->with('active_tab', 'ortu');
     }
 
     public function ortuLogin(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => 'ortu'], $request->remember)) {
+            $request->session()->regenerate();
             return redirect()->route('portal.ortu.dashboard');
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah.'])->withInput();
+        return redirect()->route('portal')->with('error_ortu', 'Email atau password salah.')->withInput()->with('active_tab', 'ortu');
     }
 
     // ===================== SISWA =====================
@@ -59,21 +61,22 @@ class AuthController extends Controller
         if (Auth::check() && Auth::user()->isSiswa()) {
             return redirect()->route('portal.siswa.dashboard');
         }
-        return view('portal.siswa-login');
+        return redirect()->route('portal')->with('active_tab', 'siswa');
     }
 
     public function siswaLogin(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email'    => 'required|email',
             'password' => 'required',
         ]);
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => 'siswa'], $request->remember)) {
+            $request->session()->regenerate();
             return redirect()->route('portal.siswa.dashboard');
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah.'])->withInput();
+        return redirect()->route('portal')->with('error_siswa', 'Email atau password salah.')->withInput()->with('active_tab', 'siswa');
     }
 
     // ===================== LOGOUT =====================
@@ -84,11 +87,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return match($role) {
-            'admin' => redirect()->route('admin.login'),
-            'ortu'  => redirect()->route('portal.ortu.login'),
-            'siswa' => redirect()->route('portal.siswa.login'),
-            default => redirect()->route('home'),
-        };
+        return redirect()->route('portal')->with('active_tab', $role ?? 'admin');
     }
 }

@@ -69,28 +69,10 @@
                 <a href="{{ route('ppdb.index') }}" class="px-3 py-2 rounded hover:bg-red-50 hover:text-red-700 transition {{ request()->routeIs('ppdb*') ? 'text-red-700 font-semibold' : 'text-gray-700' }}">PPDB</a>
                 <a href="{{ route('kontak.index') }}" class="px-3 py-2 rounded hover:bg-red-50 hover:text-red-700 transition {{ request()->routeIs('kontak*') ? 'text-red-700 font-semibold' : 'text-gray-700' }}">Kontak</a>
 
-                {{-- Portal Dropdown --}}
-                <div class="relative nav-dropdown ml-2">
-                    <button class="px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition flex items-center gap-2 text-sm font-semibold">
-                        <i class="fa fa-user-circle"></i> Portal <i class="fa fa-chevron-down text-xs"></i>
-                    </button>
-                    <div class="dropdown-menu absolute top-full right-0 bg-white shadow-lg rounded-lg w-52 py-2 border border-gray-100 z-50">
-                        <div class="px-4 py-1.5 text-xs text-gray-400 font-semibold uppercase tracking-wider">Orang Tua</div>
-                        <a href="{{ route('portal.ortu.login') }}" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-red-50 hover:text-red-700">
-                            <i class="fa fa-users w-4 text-red-500"></i> Portal Orang Tua
-                        </a>
-                        <div class="border-t border-gray-100 my-1"></div>
-                        <div class="px-4 py-1.5 text-xs text-gray-400 font-semibold uppercase tracking-wider">Siswa</div>
-                        <a href="{{ route('portal.siswa.login') }}" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-700">
-                            <i class="fa fa-graduation-cap w-4 text-blue-500"></i> Portal Siswa
-                        </a>
-                        <div class="border-t border-gray-100 my-1"></div>
-                        <div class="px-4 py-1.5 text-xs text-gray-400 font-semibold uppercase tracking-wider">Admin</div>
-                        <a href="{{ route('admin.login') }}" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 hover:text-gray-700">
-                            <i class="fa fa-shield-halved w-4 text-gray-500"></i> Login Admin
-                        </a>
-                    </div>
-                </div>
+                {{-- Portal Button --}}
+                <a href="{{ route('portal') }}" class="ml-2 px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition flex items-center gap-2 text-sm font-semibold">
+                    <i class="fa fa-user-circle"></i> Portal Login
+                </a>
             </nav>
 
             {{-- Mobile Hamburger --}}
@@ -108,8 +90,7 @@
             <a href="{{ route('galeri.index') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">Galeri</a>
             <a href="{{ route('ppdb.index') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">PPDB</a>
             <a href="{{ route('kontak.index') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">Kontak</a>
-            <a href="{{ route('portal.ortu') ?? '#' }}" class="block py-2 text-sm border-b border-gray-100 text-red-700 font-semibold"><i class="fa fa-users mr-2"></i>Portal Orang Tua</a>
-            <a href="{{ route('portal.siswa') ?? '#' }}" class="block py-2 text-sm text-blue-700 font-semibold"><i class="fa fa-graduation-cap mr-2"></i>Portal Siswa</a>
+            <a href="{{ route('portal') }}" class="block py-2 text-sm text-red-700 font-semibold"><i class="fa fa-user-circle mr-2"></i>Portal Login</a>
         </div>
     </header>
 
@@ -146,8 +127,9 @@
             <div>
                 <p class="text-red-400 text-xs font-semibold uppercase tracking-wider mb-4">Portal</p>
                 <ul class="text-sm space-y-2 mb-6">
-                    <li><a href="{{ route('portal.ortu') ?? '#' }}" class="hover:text-red-400 transition"><i class="fa fa-users mr-2 text-red-500"></i>Portal Orang Tua</a></li>
-                    <li><a href="{{ route('portal.siswa') ?? '#' }}" class="hover:text-blue-400 transition"><i class="fa fa-graduation-cap mr-2 text-blue-400"></i>Portal Siswa</a></li>
+                    <li><a href="{{ route('portal') }}#ortu" class="hover:text-red-400 transition"><i class="fa fa-users mr-2 text-red-500"></i>Portal Orang Tua</a></li>
+                    <li><a href="{{ route('portal') }}#siswa" class="hover:text-blue-400 transition"><i class="fa fa-graduation-cap mr-2 text-blue-400"></i>Portal Siswa</a></li>
+                    <li><a href="{{ route('portal') }}#admin" class="hover:text-gray-400 transition"><i class="fa fa-shield-halved mr-2 text-gray-500"></i>Admin</a></li>
                 </ul>
                 <p class="text-red-400 text-xs font-semibold uppercase tracking-wider mb-3">Statistik Pengunjung</p>
                 <div class="bg-gray-800 rounded-lg p-3 text-center">

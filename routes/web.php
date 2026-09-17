@@ -24,6 +24,11 @@ Route::get('/ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak.index');
 Route::get('/guru', [GuruController::class, 'index'])->name('guru.index');
 
+// ===================== PORTAL HUB (halaman portal terpadu) =====================
+Route::get('/portal', function () {
+    return view('portal-hub');
+})->name('portal');
+
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
