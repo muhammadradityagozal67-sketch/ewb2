@@ -50,6 +50,7 @@
             <nav class="hidden md:flex items-center gap-0.5 text-sm font-medium">
                 <a href="{{ route('home') }}" class="px-3 py-2 rounded hover:bg-red-50 hover:text-red-700 transition {{ request()->routeIs('home') ? 'text-red-700 font-semibold' : 'text-gray-700' }}">Beranda</a>
                 <a href="{{ route('profil') }}" class="px-3 py-2 rounded hover:bg-red-50 hover:text-red-700 transition {{ request()->routeIs('profil*') ? 'text-red-700 font-semibold' : 'text-gray-700' }}">Profil</a>
+                <a href="{{ route('guru.index') }}" class="px-3 py-2 rounded hover:bg-red-50 hover:text-red-700 transition {{ request()->routeIs('guru*') ? 'text-red-700 font-semibold' : 'text-gray-700' }}">Guru</a>
 
                 {{-- Akademik Dropdown --}}
                 <div class="relative nav-dropdown">
@@ -75,13 +76,18 @@
                     </button>
                     <div class="dropdown-menu absolute top-full right-0 bg-white shadow-lg rounded-lg w-52 py-2 border border-gray-100 z-50">
                         <div class="px-4 py-1.5 text-xs text-gray-400 font-semibold uppercase tracking-wider">Orang Tua</div>
-                        <a href="{{ route('portal.ortu') ?? '#' }}" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-red-50 hover:text-red-700">
+                        <a href="{{ route('portal.ortu.login') }}" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-red-50 hover:text-red-700">
                             <i class="fa fa-users w-4 text-red-500"></i> Portal Orang Tua
                         </a>
                         <div class="border-t border-gray-100 my-1"></div>
                         <div class="px-4 py-1.5 text-xs text-gray-400 font-semibold uppercase tracking-wider">Siswa</div>
-                        <a href="{{ route('portal.siswa') ?? '#' }}" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-700">
+                        <a href="{{ route('portal.siswa.login') }}" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-700">
                             <i class="fa fa-graduation-cap w-4 text-blue-500"></i> Portal Siswa
+                        </a>
+                        <div class="border-t border-gray-100 my-1"></div>
+                        <div class="px-4 py-1.5 text-xs text-gray-400 font-semibold uppercase tracking-wider">Admin</div>
+                        <a href="{{ route('admin.login') }}" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 hover:text-gray-700">
+                            <i class="fa fa-shield-halved w-4 text-gray-500"></i> Login Admin
                         </a>
                     </div>
                 </div>
