@@ -104,7 +104,8 @@ class AdminController extends Controller
             'gambar'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
         
-        $data = $request->only('judul', 'ringkasan', 'isi', 'penulis', 'tanggal');
+        $data = $request->only('judul', 'ringkasan', 'isi', 'tanggal');
+        $data['penulis'] = $request->filled('penulis') ? $request->penulis : 'Admin';
         $data['slug'] = Str::slug($request->judul) . '-' . time();
         
         if ($request->hasFile('gambar')) {
@@ -130,7 +131,8 @@ class AdminController extends Controller
         ]);
         
         $berita = Berita::findOrFail($id);
-        $data = $request->only('judul', 'ringkasan', 'isi', 'penulis', 'tanggal');
+        $data = $request->only('judul', 'ringkasan', 'isi', 'tanggal');
+        $data['penulis'] = $request->filled('penulis') ? $request->penulis : 'Admin';
         
         if ($request->hasFile('gambar')) {
             if ($berita->gambar && file_exists(public_path('images/berita/' . $berita->gambar))) {
