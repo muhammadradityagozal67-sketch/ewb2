@@ -56,6 +56,14 @@ Route::middleware('role:admin')->prefix('admin')->group(function () {
     Route::put('/galeri/{id}', [AdminController::class, 'updateGaleri'])->name('admin.galeri.update');
     Route::delete('/galeri/{id}', [AdminController::class, 'destroyGaleri'])->name('admin.galeri.destroy');
 
+    // Profil Update
+    Route::post('/profil', [AdminController::class, 'updateProfil'])->name('admin.profil.update');
+
+    // Jurusan CRUD
+    Route::post('/jurusan', [AdminController::class, 'storeJurusan'])->name('admin.jurusan.store');
+    Route::put('/jurusan/{id}', [AdminController::class, 'updateJurusan'])->name('admin.jurusan.update');
+    Route::delete('/jurusan/{id}', [AdminController::class, 'destroyJurusan'])->name('admin.jurusan.destroy');
+
     // PPDB Management
     Route::get('/ppdb-pendaftar', [AdminController::class, 'ppdbIndex'])->name('admin.ppdb.index');
     Route::patch('/ppdb-pendaftar/{id}/status', [AdminController::class, 'updatePpdbStatus'])->name('admin.ppdb.updateStatus');

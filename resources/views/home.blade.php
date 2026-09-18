@@ -101,18 +101,18 @@
         <div class="w-12 h-px bg-red-500 mx-auto mb-10"></div>
         <div class="grid md:grid-cols-4 gap-6">
             @foreach($beritaTerbaru as $berita)
-                <div class="bg-white border border-neutral-200 overflow-hidden group">
+                <a href="{{ route('berita.show', $berita->slug) }}" class="block bg-white border border-neutral-200 overflow-hidden hover:border-red-500 hover:shadow-md transition">
                     @if($berita->gambar && file_exists(public_path('images/berita/'.$berita->gambar)))
-                        <img src="{{ asset('images/berita/'.$berita->gambar) }}" alt="{{ $berita->judul }}" class="h-36 w-full object-cover">
+                        <img src="{{ asset('images/berita/'.$berita->gambar) }}" alt="{{ $berita->judul }}" class="h-48 w-full object-contain bg-gray-50 border-b">
                     @else
-                        <div class="h-36 bg-neutral-200 flex items-center justify-center text-neutral-400 text-sm">Gambar</div>
+                        <div class="h-48 bg-neutral-200 flex items-center justify-center text-neutral-400 text-sm">Gambar</div>
                     @endif
                     <div class="p-5">
                         <p class="font-semibold text-neutral-900 text-sm leading-snug">{{ $berita->judul }}</p>
                         <p class="text-xs text-neutral-400 mt-3">{{ $berita->tanggal->format('d M Y') }} · {{ $berita->penulis }}</p>
-                        <a href="{{ route('berita.show', $berita->slug) }}" class="inline-block mt-4 text-xs uppercase tracking-wide text-red-600 font-semibold hover:text-red-700">Baca Selengkapnya →</a>
+                        <span class="inline-block mt-4 text-xs uppercase tracking-wide text-red-600 font-semibold">Baca Selengkapnya →</span>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
         <div class="text-center mt-10">
@@ -121,23 +121,44 @@
     </section>
 
     {{-- GALERI KEGIATAN --}}
-    <section class="bg-white py-16">
+    <section class="bg-gray-50 py-16" x-data="{ modalOpen: false, modalImg: '', modalTitle: '', modalKategori: '' }">
         <div class="max-w-7xl mx-auto px-6">
             <h2 class="font-display text-2xl font-bold text-neutral-900 text-center mb-2">Galeri Kegiatan</h2>
             <div class="w-12 h-px bg-red-500 mx-auto mb-10"></div>
             <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
                 @foreach($galeriTerbaru as $galeri)
                     @if($galeri->gambar && file_exists(public_path('images/galeri/'.$galeri->gambar)))
-                        <img src="{{ asset('images/galeri/'.$galeri->gambar) }}" alt="{{ $galeri->judul }}" class="h-28 w-full object-cover">
+                        <div @click="modalImg = '{{ asset('images/galeri/'.$galeri->gambar) }}'; modalTitle = '{{ addslashes($galeri->judul) }}'; modalKategori = '{{ addslashes($galeri->kategori) }}'; modalOpen = true" class="cursor-pointer overflow-hidden rounded-lg hover:shadow-lg transition transform hover:-translate-y-1">
+                            <img src="{{ asset('images/galeri/'.$galeri->gambar) }}" alt="{{ $galeri->judul }}" class="h-32 w-full object-cover bg-white border border-neutral-200 hover:scale-105 transition duration-300">
+                        </div>
                     @else
-                        <div class="h-28 bg-neutral-200 flex items-center justify-center text-xs text-neutral-500 text-center px-2">
+                        <div class="h-32 border border-neutral-200 bg-neutral-100 flex items-center justify-center text-xs text-neutral-500 text-center px-2 rounded-lg">
                             {{ $galeri->judul }}
                         </div>
                     @endif
                 @endforeach
             </div>
-            <div class="text-center mt-10">
-                <a href="{{ route('galeri.index') }}" class="border border-neutral-950 text-neutral-950 px-6 py-3 text-sm tracking-wide uppercase font-semibold hover:bg-neutral-950 hover:text-white transition">Lihat Semua Galeri</a>
+            
+            <!-- Alpine Modal for Galeri Home -->
+            <div x-show="modalOpen" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;">
+                <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                    <div x-show="modalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-900 bg-opacity-80 transition-opacity" @click="modalOpen = false" aria-hidden="true"></div>
+                    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                    <div x-show="modalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                        <div class="relative bg-black">
+                            <button @click="modalOpen = false" class="absolute top-4 right-4 bg-white bg-opacity-20 hover:bg-opacity-40 text-white rounded-full w-10 h-10 flex items-center justify-center z-10"><i class="fa fa-times"></i></button>
+                            <img :src="modalImg" class="w-full max-h-[70vh] object-contain">
+                        </div>
+                        <div class="bg-white px-6 py-4">
+                            <h3 class="text-lg leading-6 font-bold text-gray-900" x-text="modalTitle"></h3>
+                            <p class="text-sm text-cyan-600 uppercase tracking-wide mt-1" x-text="modalKategori"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <a href="{{ route('galeri.index') }}" class="border-2 border-neutral-900 text-neutral-900 px-8 py-3 text-sm tracking-wide uppercase font-bold hover:bg-neutral-900 hover:text-white transition rounded-full">Lihat Semua Galeri</a>
             </div>
         </div>
     </section>

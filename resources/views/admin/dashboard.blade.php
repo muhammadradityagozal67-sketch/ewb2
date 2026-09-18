@@ -22,6 +22,12 @@
                 <button @click="tab = 'overview'" :class="{'bg-red-700 text-white': tab === 'overview', 'hover:bg-gray-800 text-gray-300': tab !== 'overview'}" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition">
                     <i class="fa fa-home w-4 text-center"></i> Overview
                 </button>
+                <button @click="tab = 'profil'" :class="{'bg-red-700 text-white': tab === 'profil', 'hover:bg-gray-800 text-gray-300': tab !== 'profil'}" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition">
+                    <i class="fa fa-building w-4 text-center"></i> Profil Sekolah
+                </button>
+                <button @click="tab = 'jurusan'" :class="{'bg-red-700 text-white': tab === 'jurusan', 'hover:bg-gray-800 text-gray-300': tab !== 'jurusan'}" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition">
+                    <i class="fa fa-laptop-code w-4 text-center"></i> Jurusan
+                </button>
                 <button @click="tab = 'guru'" :class="{'bg-red-700 text-white': tab === 'guru', 'hover:bg-gray-800 text-gray-300': tab !== 'guru'}" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition">
                     <i class="fa fa-chalkboard-teacher w-4 text-center"></i> Data Guru
                 </button>
@@ -87,6 +93,107 @@
                         <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-2"><i class="fa fa-user-plus"></i></div>
                         <p class="text-2xl font-bold text-gray-800">{{ $totalPpdb }}</p>
                         <p class="text-xs text-gray-500 mt-0.5">Pendaftar PPDB</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- TAB: PROFIL --}}
+            <div x-show="tab === 'profil'" style="display: none;">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h2 class="text-lg font-bold mb-4">Kelola Profil Sekolah</h2>
+                    <form action="{{ route('admin.profil.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="space-y-4 mb-6">
+                            <div><label class="block text-sm mb-1">Sejarah</label><textarea name="sejarah" class="w-full border p-2 rounded" rows="4">{{ $profil->sejarah ?? '' }}</textarea></div>
+                            <div><label class="block text-sm mb-1">Visi & Misi (HTML)</label><textarea name="visi_misi" class="w-full border p-2 rounded" rows="4">{{ $profil->visi_misi ?? '' }}</textarea></div>
+                            <div class="border p-4 rounded-lg bg-gray-50">
+                                <h4 class="font-bold mb-2">Sambutan Kepala Sekolah</h4>
+                                <div><label class="block text-sm mb-1">Nama Kepala Sekolah</label><input type="text" name="nama_kepsek" value="{{ $profil->nama_kepsek ?? '' }}" class="w-full border p-2 rounded mb-2"></div>
+                                <div><label class="block text-sm mb-1">Teks Sambutan</label><textarea name="sambutan" class="w-full border p-2 rounded mb-2" rows="4">{{ $profil->sambutan ?? '' }}</textarea></div>
+                                <div><label class="block text-sm mb-1">Foto Kepala Sekolah (Kosongkan jika tidak diubah)</label><input type="file" name="foto_kepsek_file" class="w-full border p-2 rounded bg-white text-sm"></div>
+                                @if(isset($profil) && $profil->foto_kepsek)
+                                    <img src="{{ asset($profil->foto_kepsek) }}" class="mt-2 h-20 rounded">
+                                @endif
+                            </div>
+                            <div class="border p-4 rounded-lg bg-gray-50">
+                                <h4 class="font-bold mb-2">Struktur Organisasi</h4>
+                                <div><label class="block text-sm mb-1">Teks Pengantar</label><textarea name="struktur" class="w-full border p-2 rounded mb-2" rows="2">{{ $profil->struktur ?? '' }}</textarea></div>
+                                <div><label class="block text-sm mb-1">Gambar Bagan Struktur (Kosongkan jika tidak diubah)</label><input type="file" name="foto_struktur_file" class="w-full border p-2 rounded bg-white text-sm"></div>
+                                @if(isset($profil) && $profil->foto_struktur)
+                                    <img src="{{ asset($profil->foto_struktur) }}" class="mt-2 h-20 rounded">
+                                @endif
+                            </div>
+                            <div><label class="block text-sm mb-1">Pengantar Fasilitas</label><textarea name="fasilitas" class="w-full border p-2 rounded" rows="2">{{ $profil->fasilitas ?? '' }}</textarea></div>
+                            <div><label class="block text-sm mb-1">Pengantar Jurusan</label><textarea name="jurusan_teks" class="w-full border p-2 rounded" rows="2">{{ $profil->jurusan_teks ?? '' }}</textarea></div>
+                        </div>
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm">Simpan Perubahan</button>
+                    </form>
+                </div>
+            </div>
+
+            {{-- TAB: JURUSAN --}}
+            <div x-show="tab === 'jurusan'" style="display: none;" x-data="{ showModal: false, editMode: false, form: {} }">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold">Data Jurusan</h2>
+                        <button @click="showModal = true; editMode = false; form = {}" class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700">
+                            + Tambah Jurusan
+                        </button>
+                    </div>
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b">
+                                <th class="p-3 text-left w-20">Foto</th>
+                                <th class="p-3 text-left">Nama Jurusan</th>
+                                <th class="p-3 text-left">Deskripsi</th>
+                                <th class="p-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($jurusans as $j)
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-3">
+                                    @if($j->foto)
+                                        <img src="{{ asset($j->foto) }}" class="w-16 h-12 object-cover rounded border">
+                                    @else
+                                        <span class="text-xs text-gray-400">No image</span>
+                                    @endif
+                                </td>
+                                <td class="p-3 font-medium">{{ $j->nama }}</td>
+                                <td class="p-3 truncate max-w-xs">{{ $j->deskripsi }}</td>
+                                <td class="p-3 text-center flex justify-center gap-2 items-center h-full pt-4">
+                                    <button @click="showModal = true; editMode = true; form = {{ json_encode($j) }}" class="text-blue-500 hover:text-blue-700"><i class="fa fa-edit"></i></button>
+                                    <form action="{{ route('admin.jurusan.destroy', $j->id) }}" method="POST" onsubmit="return confirm('Hapus jurusan ini?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-700"><i class="fa fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                {{-- Modal Form Jurusan --}}
+                <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div class="bg-white rounded-xl w-full max-w-md p-6">
+                        <h3 class="text-lg font-bold mb-4" x-text="editMode ? 'Edit Jurusan' : 'Tambah Jurusan'"></h3>
+                        <form :action="editMode ? '{{ url('admin/jurusan') }}/' + form.id : '{{ route('admin.jurusan.store') }}'" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="_method" :value="editMode ? 'PUT' : 'POST'">
+                            <div class="space-y-4 mb-6">
+                                <div><label class="block text-sm mb-1">Nama Jurusan</label><input type="text" name="nama" x-model="form.nama" required class="w-full border p-2 rounded"></div>
+                                <div><label class="block text-sm mb-1">Deskripsi Singkat</label><textarea name="deskripsi" x-model="form.deskripsi" class="w-full border p-2 rounded" rows="3"></textarea></div>
+                                <div>
+                                    <label class="block text-sm mb-1">Foto Ilustrasi <span class="text-xs text-gray-400" x-text="editMode ? '(Kosongkan jika tidak diubah)' : ''"></span></label>
+                                    <input type="file" name="foto_file" accept="image/*" class="w-full border p-2 rounded text-sm">
+                                </div>
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button type="button" @click="showModal = false" class="px-4 py-2 border rounded-lg text-sm">Batal</button>
+                                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm">Simpan</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -205,7 +312,7 @@
                 <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                     <div class="bg-white rounded-xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
                         <h3 class="text-lg font-bold mb-4" x-text="editMode ? 'Edit Berita' : 'Tulis Berita Baru'"></h3>
-                        <form :action="editMode ? '{{ url('admin/berita') }}/' + form.id : '{{ route('admin.berita.store') }}'" method="POST">
+                        <form :action="editMode ? '{{ url('admin/berita') }}/' + form.id : '{{ route('admin.berita.store') }}'" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="_method" :value="editMode ? 'PUT' : 'POST'">
                             <div class="space-y-4 mb-6">
@@ -213,6 +320,10 @@
                                 <div class="grid grid-cols-2 gap-4">
                                     <div><label class="block text-sm mb-1">Tanggal</label><input type="date" name="tanggal" x-model="form.tanggal" required class="w-full border p-2 rounded"></div>
                                     <div><label class="block text-sm mb-1">Penulis</label><input type="text" name="penulis" x-model="form.penulis" class="w-full border p-2 rounded"></div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm mb-1">Gambar Berita <span class="text-xs text-gray-400" x-text="editMode ? '(Kosongkan jika tidak ingin diubah)' : ''"></span></label>
+                                    <input type="file" name="gambar" accept="image/*" class="w-full border p-2 rounded">
                                 </div>
                                 <div><label class="block text-sm mb-1">Ringkasan</label><textarea name="ringkasan" x-model="form.ringkasan" class="w-full border p-2 rounded" rows="2"></textarea></div>
                                 <div><label class="block text-sm mb-1">Isi Berita</label><textarea name="isi" x-model="form.isi" required class="w-full border p-2 rounded" rows="6"></textarea></div>
@@ -238,7 +349,7 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         @foreach($galeris as $gal)
                         <div class="border rounded-lg p-2 relative group">
-                            <img src="{{ $gal->gambar }}" class="w-full h-32 object-cover rounded mb-2">
+                            <img src="{{ filter_var($gal->gambar, FILTER_VALIDATE_URL) ? $gal->gambar : asset('images/galeri/' . $gal->gambar) }}" class="w-full h-32 object-cover rounded mb-2">
                             <p class="text-sm font-medium truncate">{{ $gal->judul }}</p>
                             <p class="text-xs text-gray-500">{{ $gal->kategori ?? 'Umum' }}</p>
                             
@@ -258,12 +369,15 @@
                 <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                     <div class="bg-white rounded-xl w-full max-w-md p-6">
                         <h3 class="text-lg font-bold mb-4" x-text="editMode ? 'Edit Foto' : 'Tambah Foto Baru'"></h3>
-                        <form :action="editMode ? '{{ url('admin/galeri') }}/' + form.id : '{{ route('admin.galeri.store') }}'" method="POST">
+                        <form :action="editMode ? '{{ url('admin/galeri') }}/' + form.id : '{{ route('admin.galeri.store') }}'" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="_method" :value="editMode ? 'PUT' : 'POST'">
                             <div class="space-y-4 mb-6">
                                 <div><label class="block text-sm mb-1">Judul Foto</label><input type="text" name="judul" x-model="form.judul" required class="w-full border p-2 rounded"></div>
-                                <div><label class="block text-sm mb-1">URL Gambar</label><input type="url" name="gambar" x-model="form.gambar" required class="w-full border p-2 rounded" placeholder="https://..."></div>
+                                <div>
+                                    <label class="block text-sm mb-1">Upload Gambar <span class="text-xs text-gray-400" x-text="editMode ? '(Kosongkan jika tidak ingin diubah)' : ''"></span></label>
+                                    <input type="file" name="gambar" accept="image/*" class="w-full border p-2 rounded">
+                                </div>
                                 <div><label class="block text-sm mb-1">Kategori</label><input type="text" name="kategori" x-model="form.kategori" class="w-full border p-2 rounded" placeholder="Kegiatan / Fasilitas"></div>
                             </div>
                             <div class="flex justify-end gap-2">

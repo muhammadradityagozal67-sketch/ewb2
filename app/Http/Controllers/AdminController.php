@@ -26,9 +26,12 @@ class AdminController extends Controller
         $galeris        = Galeri::orderBy('created_at', 'desc')->get();
         $ppdbList       = PpdbPendaftar::orderBy('created_at', 'desc')->paginate(15, ['*'], 'ppdb_page');
         
+        $profil         = \App\Models\Profil::first();
+        $jurusans       = \App\Models\Jurusan::all();
+
         return view('admin.dashboard', compact(
             'totalGuru', 'totalSiswa', 'totalBerita', 'totalPengunjung', 'totalPpdb',
-            'gurus', 'beritas', 'galeris', 'ppdbList'
+            'gurus', 'beritas', 'galeris', 'ppdbList', 'profil', 'jurusans'
         ));
     }
 
@@ -98,9 +101,20 @@ class AdminController extends Controller
             'isi'       => 'required|string',
             'penulis'   => 'nullable|string|max:100',
             'tanggal'   => 'required|date',
+            'gambar'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
-        $slug = Str::slug($request->judul) . '-' . time();
-        Berita::create(array_merge($request->only('judul', 'ringkasan', 'isi', 'penulis', 'tanggal'), ['slug' => $slug]));
+        
+        $data = $request->only('judul', 'ringkasan', 'isi', 'penulis', 'tanggal');
+        $data['slug'] = Str::slug($request->judul) . '-' . time();
+        
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_berita.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/berita'), $filename);
+            $data['gambar'] = $filename;
+        }
+
+        Berita::create($data);
         return redirect()->route('admin.dashboard', ['tab' => 'berita'])->with('success', 'Berita berhasil ditambahkan.');
     }
 
@@ -112,9 +126,23 @@ class AdminController extends Controller
             'isi'       => 'required|string',
             'penulis'   => 'nullable|string|max:100',
             'tanggal'   => 'required|date',
+            'gambar'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+        
         $berita = Berita::findOrFail($id);
-        $berita->update($request->only('judul', 'ringkasan', 'isi', 'penulis', 'tanggal'));
+        $data = $request->only('judul', 'ringkasan', 'isi', 'penulis', 'tanggal');
+        
+        if ($request->hasFile('gambar')) {
+            if ($berita->gambar && file_exists(public_path('images/berita/' . $berita->gambar))) {
+                unlink(public_path('images/berita/' . $berita->gambar));
+            }
+            $file = $request->file('gambar');
+            $filename = time() . '_berita.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/berita'), $filename);
+            $data['gambar'] = $filename;
+        }
+
+        $berita->update($data);
         return redirect()->route('admin.dashboard', ['tab' => 'berita'])->with('success', 'Berita berhasil diperbarui.');
     }
 
@@ -129,10 +157,19 @@ class AdminController extends Controller
     {
         $request->validate([
             'judul'    => 'required|string|max:255',
-            'gambar'   => 'required|url',
+            'gambar'   => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'kategori' => 'nullable|string|max:100',
         ]);
-        Galeri::create($request->only('judul', 'gambar', 'kategori'));
+        
+        $data = $request->only('judul', 'kategori');
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_galeri.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/galeri'), $filename);
+            $data['gambar'] = $filename;
+        }
+
+        Galeri::create($data);
         return redirect()->route('admin.dashboard', ['tab' => 'galeri'])->with('success', 'Foto galeri berhasil ditambahkan.');
     }
 
@@ -140,11 +177,24 @@ class AdminController extends Controller
     {
         $request->validate([
             'judul'    => 'required|string|max:255',
-            'gambar'   => 'required|url',
+            'gambar'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'kategori' => 'nullable|string|max:100',
         ]);
+        
         $galeri = Galeri::findOrFail($id);
-        $galeri->update($request->only('judul', 'gambar', 'kategori'));
+        $data = $request->only('judul', 'kategori');
+        
+        if ($request->hasFile('gambar')) {
+            if ($galeri->gambar && file_exists(public_path('images/galeri/' . $galeri->gambar))) {
+                unlink(public_path('images/galeri/' . $galeri->gambar));
+            }
+            $file = $request->file('gambar');
+            $filename = time() . '_galeri.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/galeri'), $filename);
+            $data['gambar'] = $filename;
+        }
+
+        $galeri->update($data);
         return redirect()->route('admin.dashboard', ['tab' => 'galeri'])->with('success', 'Galeri berhasil diperbarui.');
     }
 
@@ -176,5 +226,83 @@ class AdminController extends Controller
     {
         PpdbPendaftar::findOrFail($id)->delete();
         return redirect()->route('admin.dashboard', ['tab' => 'ppdb'])->with('success', 'Data pendaftar berhasil dihapus.');
+    }
+
+    // ======================== PROFIL ========================
+    public function updateProfil(Request $request)
+    {
+        $data = $request->except(['_token', 'foto_kepsek_file', 'foto_struktur_file']);
+        
+        if ($request->hasFile('foto_kepsek_file')) {
+            $file = $request->file('foto_kepsek_file');
+            $filename = time() . '_kepsek.' . $file->getClientOriginalExtension();
+            $file->move(public_path('img'), $filename);
+            $data['foto_kepsek'] = 'img/' . $filename;
+        }
+
+        if ($request->hasFile('foto_struktur_file')) {
+            $file = $request->file('foto_struktur_file');
+            $filename = time() . '_struktur.' . $file->getClientOriginalExtension();
+            $file->move(public_path('img'), $filename);
+            $data['foto_struktur'] = 'img/' . $filename;
+        }
+
+        $profil = \App\Models\Profil::first();
+        if ($profil) {
+            $profil->update($data);
+        } else {
+            \App\Models\Profil::create($data);
+        }
+
+        return redirect()->route('admin.dashboard', ['tab' => 'profil'])->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    // ======================== JURUSAN ========================
+    public function storeJurusan(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string',
+            'deskripsi' => 'nullable|string',
+            'foto_file' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        $data = $request->only('nama', 'deskripsi');
+        if ($request->hasFile('foto_file')) {
+            $file = $request->file('foto_file');
+            $filename = time() . '_jurusan.' . $file->getClientOriginalExtension();
+            $file->move(public_path('img'), $filename);
+            $data['foto'] = 'img/' . $filename;
+        }
+
+        \App\Models\Jurusan::create($data);
+        return redirect()->route('admin.dashboard', ['tab' => 'jurusan'])->with('success', 'Jurusan berhasil ditambahkan.');
+    }
+
+    public function updateJurusan(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string',
+            'deskripsi' => 'nullable|string',
+            'foto_file' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        $jurusan = \App\Models\Jurusan::findOrFail($id);
+        $data = $request->only('nama', 'deskripsi');
+        
+        if ($request->hasFile('foto_file')) {
+            $file = $request->file('foto_file');
+            $filename = time() . '_jurusan.' . $file->getClientOriginalExtension();
+            $file->move(public_path('img'), $filename);
+            $data['foto'] = 'img/' . $filename;
+        }
+
+        $jurusan->update($data);
+        return redirect()->route('admin.dashboard', ['tab' => 'jurusan'])->with('success', 'Jurusan berhasil diperbarui.');
+    }
+
+    public function destroyJurusan($id)
+    {
+        \App\Models\Jurusan::findOrFail($id)->delete();
+        return redirect()->route('admin.dashboard', ['tab' => 'jurusan'])->with('success', 'Jurusan berhasil dihapus.');
     }
 }

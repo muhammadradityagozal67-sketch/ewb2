@@ -15,18 +15,18 @@
     <div class="max-w-7xl mx-auto px-6 py-14">
         <div class="grid md:grid-cols-4 gap-6">
             @foreach($beritaList as $berita)
-                <div class="bg-white border border-neutral-200 overflow-hidden">
+                <a href="{{ route('berita.show', $berita->slug) }}" class="block bg-white border border-neutral-200 overflow-hidden hover:border-cyan-500 hover:shadow-md transition">
                     @if($berita->gambar && file_exists(public_path('images/berita/'.$berita->gambar)))
-                        <img src="{{ asset('images/berita/'.$berita->gambar) }}" alt="{{ $berita->judul }}" class="h-36 w-full object-cover">
+                        <img src="{{ asset('images/berita/'.$berita->gambar) }}" alt="{{ $berita->judul }}" class="h-48 w-full object-contain bg-gray-50 border-b">
                     @else
-                        <div class="h-36 bg-neutral-200 flex items-center justify-center text-neutral-400 text-sm">Gambar</div>
+                        <div class="h-48 bg-neutral-200 flex items-center justify-center text-neutral-400 text-sm">Gambar</div>
                     @endif
                     <div class="p-5">
                         <p class="font-semibold text-neutral-900 text-sm leading-snug">{{ $berita->judul }}</p>
                         <p class="text-xs text-neutral-400 mt-3">{{ $berita->tanggal->format('d M Y') }} · {{ $berita->penulis }}</p>
-                        <a href="{{ route('berita.show', $berita->slug) }}" class="inline-block mt-4 text-xs uppercase tracking-wide text-cyan-600 font-semibold hover:text-cyan-700">Baca Selengkapnya →</a>
+                        <span class="inline-block mt-4 text-xs uppercase tracking-wide text-cyan-600 font-semibold">Baca Selengkapnya →</span>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
 
