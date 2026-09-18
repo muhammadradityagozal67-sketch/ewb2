@@ -31,15 +31,8 @@
             <div class="w-12 h-px bg-cyan-500 mb-5"></div>
             
             @if($activeSection === 'sejarah')
-                <div class="flex flex-col md:flex-row gap-8 items-start">
-                    <div class="md:w-1/2">
-                        <img src="{{ asset('img/fasilitas-studio.jpg') }}" alt="Sejarah SMK" class="w-full h-auto rounded-xl shadow-lg border border-gray-100 object-cover aspect-video">
-                    </div>
-                    <div class="md:w-1/2 text-neutral-600 leading-relaxed text-justify">
-                        <div class="prose max-w-none">
-                            <p class="first-letter:text-5xl first-letter:font-bold first-letter:text-cyan-600 first-letter:float-left first-letter:mr-3 first-letter:mt-1">{{ $kontenSection }}</p>
-                        </div>
-                    </div>
+                <div class="text-neutral-600 leading-relaxed text-justify">
+                    <p class="first-letter:text-5xl first-letter:font-bold first-letter:text-cyan-600 first-letter:float-left first-letter:mr-3 first-letter:mt-1 leading-8">{{ $kontenSection }}</p>
                 </div>
 
             @elseif($activeSection === 'visi-misi')

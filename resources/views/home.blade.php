@@ -38,27 +38,28 @@
     {{-- TENTANG KAMI --}}
     <section class="bg-white py-16">
         <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-            @if(file_exists(public_path('images/umum/tentang-kami.jpg')))
-                <img src="{{ asset('images/umum/tentang-kami.jpg') }}" alt="Kegiatan Siswa" class="h-72 w-full object-cover">
-            @else
-                <div class="bg-neutral-200 h-72 flex items-center justify-center text-neutral-500">
-                    Foto Kegiatan Siswa
+            <div class="relative">
+                <img src="{{ asset('images/umum/tentang-kami.jpg') }}" alt="Kegiatan Siswa SMK INFOKOM" class="w-full h-80 object-cover rounded-xl shadow-lg">
+                <div class="absolute -bottom-4 -right-4 bg-red-600 text-white px-5 py-3 rounded-lg shadow-lg">
+                    <p class="text-2xl font-bold">20+</p>
+                    <p class="text-xs">Tahun Berdiri</p>
                 </div>
-            @endif
+            </div>
             <div>
-                <h2 class="font-display text-2xl font-bold text-neutral-900 mb-4">Tentang Kami</h2>
+                <p class="text-red-500 text-xs tracking-[0.2em] uppercase mb-2 font-semibold">Tentang Kami</p>
+                <h2 class="font-display text-2xl font-bold text-neutral-900 mb-4">SMK INFOKOM Kota Bogor</h2>
                 <div class="w-12 h-px bg-red-500 mb-5"></div>
                 <p class="text-neutral-600 leading-relaxed mb-6">
                     SMK INFOKOM Kota Bogor adalah lembaga pendidikan menengah kejuruan yang berkomitmen membentuk generasi
                     berintegritas, kompetitif, dan siap melanjutkan pendidikan tinggi maupun berkarya di
                     tengah masyarakat. Didukung tenaga pendidik profesional dan fasilitas lengkap.
                 </p>
-                <a href="{{ route('profil') }}" class="inline-block bg-neutral-950 text-white px-6 py-3 text-sm tracking-wide uppercase font-semibold hover:bg-neutral-800 transition">Selengkapnya</a>
+                <a href="{{ route('profil') }}" class="inline-block bg-neutral-950 text-white px-6 py-3 text-sm tracking-wide uppercase font-semibold hover:bg-red-600 transition rounded-lg">Selengkapnya</a>
 
                 <div class="grid grid-cols-4 gap-4 mt-10 text-center">
                     @foreach($statistik as $stat)
-                        <div>
-                            <p class="font-display text-2xl font-bold text-neutral-900">{{ $stat['nilai'] }}</p>
+                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                            <p class="font-display text-2xl font-bold text-red-600">{{ $stat['nilai'] }}</p>
                             <p class="text-xs text-neutral-500 uppercase tracking-wide mt-1">{{ $stat['label'] }}</p>
                         </div>
                     @endforeach
