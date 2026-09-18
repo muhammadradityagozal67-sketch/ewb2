@@ -103,6 +103,7 @@
                     <table class="w-full text-sm border-collapse">
                         <thead>
                             <tr class="bg-gray-50 border-b">
+                                <th class="p-3 text-left w-16">Foto</th>
                                 <th class="p-3 text-left">Nama</th>
                                 <th class="p-3 text-left">Jabatan</th>
                                 <th class="p-3 text-left">Bidang</th>
@@ -112,10 +113,19 @@
                         <tbody>
                             @foreach($gurus as $g)
                             <tr class="border-b hover:bg-gray-50">
+                                <td class="p-3">
+                                    @if($g->foto)
+                                        <img src="{{ asset($g->foto) }}" class="w-10 h-10 object-cover rounded-full border">
+                                    @else
+                                        <div class="w-10 h-10 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-bold">
+                                            {{ strtoupper(substr($g->nama, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                </td>
                                 <td class="p-3">{{ $g->nama }}</td>
                                 <td class="p-3">{{ $g->jabatan }}</td>
                                 <td class="p-3">{{ $g->bidang ?? '-' }}</td>
-                                <td class="p-3 text-center flex justify-center gap-2">
+                                <td class="p-3 text-center flex justify-center gap-2 items-center h-full pt-4">
                                     <button @click="showModal = true; editMode = true; form = {{ json_encode($g) }}" class="text-blue-500 hover:text-blue-700"><i class="fa fa-edit"></i></button>
                                     <form action="{{ route('admin.guru.destroy', $g->id) }}" method="POST" onsubmit="return confirm('Hapus guru ini?')">
                                         @csrf @method('DELETE')
@@ -132,7 +142,7 @@
                 <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                     <div class="bg-white rounded-xl w-full max-w-md p-6">
                         <h3 class="text-lg font-bold mb-4" x-text="editMode ? 'Edit Data Guru' : 'Tambah Guru Baru'"></h3>
-                        <form :action="editMode ? '{{ url('admin/guru') }}/' + form.id : '{{ route('admin.guru.store') }}'" method="POST">
+                        <form :action="editMode ? '{{ url('admin/guru') }}/' + form.id : '{{ route('admin.guru.store') }}'" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="_method" :value="editMode ? 'PUT' : 'POST'">
                             <div class="space-y-4 mb-6">
@@ -140,6 +150,10 @@
                                 <div><label class="block text-sm mb-1">Jabatan</label><input type="text" name="jabatan" x-model="form.jabatan" required class="w-full border p-2 rounded"></div>
                                 <div><label class="block text-sm mb-1">Bidang / Mata Pelajaran</label><input type="text" name="bidang" x-model="form.bidang" class="w-full border p-2 rounded"></div>
                                 <div><label class="block text-sm mb-1">Urutan Tampil</label><input type="number" name="urutan" x-model="form.urutan" class="w-full border p-2 rounded"></div>
+                                <div>
+                                    <label class="block text-sm mb-1">Foto <span class="text-xs text-gray-400" x-text="editMode && form.foto ? '(Kosongkan jika tidak ingin mengubah)' : ''"></span></label>
+                                    <input type="file" name="foto" accept="image/*" class="w-full border p-2 rounded text-sm">
+                                </div>
                             </div>
                             <div class="flex justify-end gap-2">
                                 <button type="button" @click="showModal = false" class="px-4 py-2 border rounded-lg text-sm">Batal</button>

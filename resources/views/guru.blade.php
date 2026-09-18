@@ -19,9 +19,13 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach($pimpinan as $guru)
             <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition flex items-start gap-4">
-                <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex-shrink-0 flex items-center justify-center text-lg font-bold">
-                    {{ strtoupper(substr($guru->nama, 0, 1)) }}
-                </div>
+                @if($guru->foto)
+                    <img src="{{ asset($guru->foto) }}" alt="{{ $guru->nama }}" class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-gray-200">
+                @else
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex-shrink-0 flex items-center justify-center text-lg font-bold">
+                        {{ strtoupper(substr($guru->nama, 0, 1)) }}
+                    </div>
+                @endif
                 <div>
                     <p class="font-bold text-gray-800 text-sm leading-snug">{{ $guru->nama }}</p>
                     <p class="text-xs text-red-600 font-semibold mt-1">{{ $guru->jabatan }}</p>
@@ -42,9 +46,13 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach($struktural as $guru)
             <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition flex items-start gap-4">
-                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex-shrink-0 flex items-center justify-center text-lg font-bold">
-                    {{ strtoupper(substr($guru->nama, 0, 1)) }}
-                </div>
+                @if($guru->foto)
+                    <img src="{{ asset($guru->foto) }}" alt="{{ $guru->nama }}" class="w-12 h-12 rounded-full object-cover flex-shrink-0 border border-gray-200">
+                @else
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex-shrink-0 flex items-center justify-center text-lg font-bold">
+                        {{ strtoupper(substr($guru->nama, 0, 1)) }}
+                    </div>
+                @endif
                 <div>
                     <p class="font-bold text-gray-800 text-sm leading-snug">{{ $guru->nama }}</p>
                     <p class="text-xs text-blue-600 font-semibold mt-1">{{ $guru->jabatan }}</p>
@@ -62,9 +70,13 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             @foreach($staff as $guru)
             <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:shadow-md transition flex items-start gap-3">
-                <div class="w-10 h-10 bg-gray-100 text-gray-500 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-sm">
-                    {{ strtoupper(substr($guru->nama, 0, 1)) }}
-                </div>
+                @if($guru->foto)
+                    <img src="{{ asset($guru->foto) }}" alt="{{ $guru->nama }}" class="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-gray-200">
+                @else
+                    <div class="w-10 h-10 bg-gray-100 text-gray-500 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-sm">
+                        {{ strtoupper(substr($guru->nama, 0, 1)) }}
+                    </div>
+                @endif
                 <div>
                     <p class="font-semibold text-gray-800 text-xs leading-snug">{{ $guru->nama }}</p>
                     <p class="text-xs text-gray-400 mt-1">{{ $guru->jabatan }}</p>

@@ -40,8 +40,18 @@ class AdminController extends Controller
             'jabatan' => 'required|string|max:255',
             'bidang'  => 'nullable|string|max:255',
             'urutan'  => 'nullable|integer',
+            'foto'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        Guru::create($request->only('nama', 'jabatan', 'bidang', 'urutan'));
+        
+        $data = $request->only('nama', 'jabatan', 'bidang', 'urutan');
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/guru'), $filename);
+            $data['foto'] = 'images/guru/' . $filename;
+        }
+
+        Guru::create($data);
         return redirect()->route('admin.dashboard', ['tab' => 'guru'])->with('success', 'Guru berhasil ditambahkan.');
     }
 
@@ -52,9 +62,24 @@ class AdminController extends Controller
             'jabatan' => 'required|string|max:255',
             'bidang'  => 'nullable|string|max:255',
             'urutan'  => 'nullable|integer',
+            'foto'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+        
         $guru = Guru::findOrFail($id);
-        $guru->update($request->only('nama', 'jabatan', 'bidang', 'urutan'));
+        $data = $request->only('nama', 'jabatan', 'bidang', 'urutan');
+        
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($guru->foto && file_exists(public_path($guru->foto))) {
+                unlink(public_path($guru->foto));
+            }
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/guru'), $filename);
+            $data['foto'] = 'images/guru/' . $filename;
+        }
+
+        $guru->update($data);
         return redirect()->route('admin.dashboard', ['tab' => 'guru'])->with('success', 'Data guru berhasil diperbarui.');
     }
 
