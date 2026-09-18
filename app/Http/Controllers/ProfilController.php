@@ -41,7 +41,7 @@ class ProfilController extends Controller
         ];
 
         $konten = [
-            'sejarah' => 'SMK INFOKOM Kota Bogor berdiri pada tahun 1998 dengan komitmen menyelenggarakan pendidikan menengah kejuruan yang unggul dan berkarakter. Berlokasi di kawasan Dramaga, Bogor, sekolah ini terus berkembang menjadi salah satu institusi pendidikan terpercaya yang menghasilkan lulusan siap melanjutkan pendidikan tinggi maupun berkarya di masyarakat.',
+            'sejarah' => 'SMK INFOKOM Kota Bogor berdiri pada tahun 1998 dengan komitmen menyelenggarakan pendidikan menengah kejuruan yang unggul dan berkarakter. Berlokasi di Jl. Letjen Ibrahim Adjie No.178, Sindangbarang, Bogor Barat, sekolah ini terus berkembang menjadi salah satu institusi pendidikan terpercaya yang menghasilkan lulusan siap melanjutkan pendidikan tinggi maupun berkarya di masyarakat.',
             'visi-misi' => 'Visi: Menjadi sekolah menengah kejuruan unggulan yang menghasilkan lulusan berintegritas, berprestasi, dan berwawasan global. Misi: Menyelenggarakan pembelajaran berkualitas berbasis karakter, mengembangkan potensi akademik dan non-akademik siswa, serta menjalin kerja sama dengan perguruan tinggi dan mitra pendidikan.',
             'sambutan' => 'Selamat datang di website resmi SMK INFOKOM Kota Bogor. Kami berkomitmen membentuk generasi yang berintegritas, kompetitif, dan siap menghadapi tantangan masa depan melalui pendidikan yang berkualitas dan berkarakter.',
             'jurusan' => 'SMK INFOKOM Kota Bogor membuka beberapa program keahlian di bidang informatika dan komunikasi untuk membekali siswa dengan kompetensi yang siap kerja maupun siap melanjutkan ke jenjang pendidikan tinggi.',

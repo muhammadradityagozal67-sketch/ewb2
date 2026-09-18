@@ -13,7 +13,7 @@ class AuthController extends Controller
         if (Auth::check() && Auth::user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
-        return redirect()->route('portal')->with('active_tab', 'admin');
+        return view('admin.login');
     }
 
     public function adminLogin(Request $request)
@@ -28,7 +28,7 @@ class AuthController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->route('portal')->with('error_admin', 'Email atau password salah, atau Anda bukan admin.')->withInput()->with('active_tab', 'admin');
+        return redirect()->route('admin.login')->withErrors(['email' => 'Email atau password salah, atau Anda bukan admin.'])->withInput();
     }
 
     // ===================== ORANG TUA =====================

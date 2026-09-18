@@ -129,7 +129,7 @@
                 <ul class="text-sm space-y-2 mb-6">
                     <li><a href="{{ route('portal') }}#ortu" class="hover:text-red-400 transition"><i class="fa fa-users mr-2 text-red-500"></i>Portal Orang Tua</a></li>
                     <li><a href="{{ route('portal') }}#siswa" class="hover:text-blue-400 transition"><i class="fa fa-graduation-cap mr-2 text-blue-400"></i>Portal Siswa</a></li>
-                    <li><a href="{{ route('portal') }}#admin" class="hover:text-gray-400 transition"><i class="fa fa-shield-halved mr-2 text-gray-500"></i>Admin</a></li>
+                    <li><a href="{{ route('admin.login') }}" class="hover:text-red-400 transition"><i class="fa fa-shield-halved mr-2 text-gray-400"></i>Portal Admin</a></li>
                 </ul>
                 <p class="text-red-400 text-xs font-semibold uppercase tracking-wider mb-3">Statistik Pengunjung</p>
                 <div class="bg-gray-800 rounded-lg p-3 text-center">
@@ -142,7 +142,7 @@
                 <div class="space-y-3 text-sm">
                     <div class="flex gap-3">
                         <i class="fa fa-map-marker-alt text-red-500 mt-0.5 w-4 flex-shrink-0"></i>
-                        <span class="text-gray-400">Jl. Raya Dramaga, Bogor, Jawa Barat 16680</span>
+                        <span class="text-gray-400">Jl. Letjen Ibrahim Adjie No.178, RT.03/RW.08, Sindangbarang, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16117</span>
                     </div>
                     <div class="flex gap-3">
                         <i class="fa fa-phone text-red-500 mt-0.5 w-4"></i>

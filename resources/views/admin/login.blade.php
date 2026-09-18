@@ -39,6 +39,9 @@
                         <i class="fa fa-sign-in-alt mr-2"></i> Masuk sebagai Admin
                     </button>
                 </form>
+                <div class="mt-4 p-3 bg-red-50 rounded-lg text-center text-xs text-red-800 border border-red-100">
+                    Akun Demo Admin: <code>admin@smkinfokom.sch.id</code> / <code>admin123</code>
+                </div>
                 <div class="mt-6 text-center">
                     <a href="{{ route('home') }}" class="text-sm text-gray-500 hover:text-gray-700">
                         <i class="fa fa-arrow-left mr-1"></i> Kembali ke Website

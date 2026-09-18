@@ -2,76 +2,29 @@
 
 @section('title', 'Portal Login - SMK INFOKOM Kota Bogor')
 
-@php $activeTab = session('active_tab', 'admin'); @endphp
+@php $activeTab = session('active_tab', 'siswa'); @endphp
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-red-50 py-12 px-4">
 
     <div class="text-center mb-10">
         <img src="{{ asset('images/umum/logo-smk.png') }}" alt="Logo" class="w-20 h-20 object-contain mx-auto mb-4">
-        <h1 class="font-display text-3xl font-bold text-gray-900">Sistem Portal</h1>
-        <p class="text-gray-500 mt-1">SMK INFOKOM Kota Bogor &mdash; Pilih portal sesuai peran Anda</p>
+        <h1 class="font-display text-3xl font-bold text-gray-900">Portal Akademik Siswa & Wali Murid</h1>
+        <p class="text-gray-500 mt-1">SMK INFOKOM Kota Bogor &mdash; Silakan pilih portal masuk Anda</p>
         <div class="w-16 h-1 bg-red-600 mx-auto mt-4 rounded-full"></div>
     </div>
 
-    {{-- TAB SELECTOR --}}
+    {{-- TAB SELECTOR (SISWA & ORANG TUA) --}}
     <div class="max-w-lg mx-auto mb-6">
         <div class="flex bg-white rounded-xl shadow-sm border border-gray-100 p-1 gap-1">
-            <button onclick="switchTab('admin')" id="tab-admin"
-                class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition tab-btn {{ $activeTab === 'admin' ? 'active-tab' : '' }} flex items-center justify-center gap-2">
-                <i class="fa fa-shield-halved"></i> Admin
+            <button onclick="switchTab('siswa')" id="tab-siswa"
+                class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition tab-btn {{ $activeTab === 'siswa' ? 'active-tab' : '' }} flex items-center justify-center gap-2">
+                <i class="fa fa-graduation-cap"></i> Portal Siswa
             </button>
             <button onclick="switchTab('ortu')" id="tab-ortu"
                 class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition tab-btn {{ $activeTab === 'ortu' ? 'active-tab' : '' }} flex items-center justify-center gap-2">
-                <i class="fa fa-users"></i> Orang Tua
+                <i class="fa fa-users"></i> Orang Tua / Wali
             </button>
-            <button onclick="switchTab('siswa')" id="tab-siswa"
-                class="flex-1 py-2.5 rounded-lg text-sm font-semibold transition tab-btn {{ $activeTab === 'siswa' ? 'active-tab' : '' }} flex items-center justify-center gap-2">
-                <i class="fa fa-graduation-cap"></i> Siswa
-            </button>
-        </div>
-    </div>
-
-    {{-- ===================== ADMIN PANEL ===================== --}}
-    <div id="panel-admin" class="max-w-lg mx-auto portal-panel {{ $activeTab !== 'admin' ? 'hidden' : '' }}">
-        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-            <div class="bg-gray-900 px-8 py-6 text-center">
-                <div class="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fa fa-shield-halved text-white text-2xl"></i>
-                </div>
-                <h2 class="text-white font-bold text-lg">Portal Admin</h2>
-                <p class="text-gray-400 text-xs mt-1">Akses penuh manajemen sekolah</p>
-            </div>
-            <div class="px-8 py-6">
-                @if(session('error_admin'))
-                    <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 mb-4 text-sm">{{ session('error_admin') }}</div>
-                @endif
-                <form method="POST" action="{{ route('admin.login.post') }}">
-                    @csrf
-                    <div class="mb-4">
-                        <label class="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Email Admin</label>
-                        <div class="relative">
-                            <i class="fa fa-envelope absolute left-3 top-3 text-gray-400 text-sm"></i>
-                            <input type="email" name="email" value="{{ old('email') }}" required
-                                class="w-full border border-gray-200 rounded-lg pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100"
-                                placeholder="admin@smkinfokom.sch.id">
-                        </div>
-                    </div>
-                    <div class="mb-5">
-                        <label class="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Password</label>
-                        <div class="relative">
-                            <i class="fa fa-lock absolute left-3 top-3 text-gray-400 text-sm"></i>
-                            <input type="password" name="password" required
-                                class="w-full border border-gray-200 rounded-lg pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100"
-                                placeholder="••••••••">
-                        </div>
-                    </div>
-                    <button type="submit" class="w-full bg-gray-900 text-white rounded-lg py-3 font-semibold hover:bg-gray-800 transition text-sm">
-                        <i class="fa fa-sign-in-alt mr-2"></i> Masuk sebagai Admin
-                    </button>
-                </form>
-                <p class="text-center text-xs text-gray-400 mt-4">Demo: <code>admin@smkinfokom.sch.id</code> / <code>admin123</code></p>
-            </div>
         </div>
     </div>
 
@@ -193,6 +146,15 @@
         </div>
     </div>
 
+    {{-- LINK TERPISAH KE PORTAL ADMIN --}}
+    <div class="max-w-lg mx-auto mt-8 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/80 hover:bg-white text-gray-600 rounded-full text-xs font-medium transition border border-gray-200 shadow-sm">
+            <i class="fa fa-shield-halved text-red-600"></i>
+            <span>Akses khusus Administrator?</span>
+            <a href="{{ route('admin.login') }}" class="text-red-700 font-bold hover:underline">Buka Portal Admin &rarr;</a>
+        </div>
+    </div>
+
 </div>
 
 <style>
@@ -203,18 +165,19 @@
 
 <script>
 function switchTab(tab) {
-    // Sembunyikan semua panel
     document.querySelectorAll('.portal-panel').forEach(p => p.classList.add('hidden'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
 
-    // Tampilkan panel yang dipilih
-    document.getElementById('panel-' + tab).classList.remove('hidden');
-    document.getElementById('tab-' + tab).classList.add('active-tab');
+    const targetPanel = document.getElementById('panel-' + tab);
+    const targetBtn = document.getElementById('tab-' + tab);
+    if (targetPanel && targetBtn) {
+        targetPanel.classList.remove('hidden');
+        targetBtn.classList.add('active-tab');
+    }
 }
 
-// Cek URL hash untuk auto-switch tab
 const hash = window.location.hash.replace('#', '');
-if (['admin', 'ortu', 'siswa'].includes(hash)) {
+if (['ortu', 'siswa'].includes(hash)) {
     switchTab(hash);
 }
 </script>

@@ -21,6 +21,9 @@ Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('berita.show');
 Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
 Route::get('/ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
+Route::post('/ppdb/daftar', [PpdbController::class, 'store'])->name('ppdb.daftar.post');
+Route::get('/ppdb/bukti/{no_pendaftaran}', [PpdbController::class, 'bukti'])->name('ppdb.bukti');
+Route::post('/ppdb/cek-status', [PpdbController::class, 'cekStatus'])->name('ppdb.cek.post');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak.index');
 Route::get('/guru', [GuruController::class, 'index'])->name('guru.index');
 
@@ -37,6 +40,26 @@ Route::get('/admin/login', [AuthController::class, 'adminLoginForm'])->name('adm
 Route::post('/admin/login', [AuthController::class, 'adminLogin'])->name('admin.login.post');
 Route::middleware('role:admin')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+    // Guru CRUD
+    Route::post('/guru', [AdminController::class, 'storeGuru'])->name('admin.guru.store');
+    Route::put('/guru/{id}', [AdminController::class, 'updateGuru'])->name('admin.guru.update');
+    Route::delete('/guru/{id}', [AdminController::class, 'destroyGuru'])->name('admin.guru.destroy');
+
+    // Berita CRUD
+    Route::post('/berita', [AdminController::class, 'storeBerita'])->name('admin.berita.store');
+    Route::put('/berita/{id}', [AdminController::class, 'updateBerita'])->name('admin.berita.update');
+    Route::delete('/berita/{id}', [AdminController::class, 'destroyBerita'])->name('admin.berita.destroy');
+
+    // Galeri CRUD
+    Route::post('/galeri', [AdminController::class, 'storeGaleri'])->name('admin.galeri.store');
+    Route::put('/galeri/{id}', [AdminController::class, 'updateGaleri'])->name('admin.galeri.update');
+    Route::delete('/galeri/{id}', [AdminController::class, 'destroyGaleri'])->name('admin.galeri.destroy');
+
+    // PPDB Management
+    Route::get('/ppdb-pendaftar', [AdminController::class, 'ppdbIndex'])->name('admin.ppdb.index');
+    Route::patch('/ppdb-pendaftar/{id}/status', [AdminController::class, 'updatePpdbStatus'])->name('admin.ppdb.updateStatus');
+    Route::delete('/ppdb-pendaftar/{id}', [AdminController::class, 'destroyPpdb'])->name('admin.ppdb.destroy');
 });
 
 // ===================== PORTAL ORANG TUA =====================
