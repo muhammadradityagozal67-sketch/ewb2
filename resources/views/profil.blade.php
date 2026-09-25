@@ -4,11 +4,11 @@
 
 @section('content')
 
-    <div class="bg-neutral-950 text-white py-14 border-b border-cyan-600/20">
+    <div class="bg-gray-900 text-white py-14 border-b border-red-600">
         <div class="max-w-7xl mx-auto px-6">
-            <p class="text-cyan-500 text-xs tracking-[0.3em] uppercase mb-2">Tentang Kami</p>
-            <h1 class="font-display text-3xl font-bold">Profil Sekolah</h1>
-            <p class="text-sm text-neutral-400 mt-2">Beranda / Profil Sekolah</p>
+            <p class="text-red-500 text-xs tracking-[0.3em] uppercase mb-2 font-bold">Tentang Kami</p>
+            <h1 class="font-display text-4xl font-bold">Profil Sekolah</h1>
+            <p class="text-sm text-gray-300 mt-2">Beranda / Profil Sekolah</p>
         </div>
     </div>
 
@@ -18,7 +18,7 @@
                 @foreach($menu as $key => $label)
                     <li>
                         <a href="{{ route('profil.section', $key) }}"
-                           class="block px-5 py-4 text-sm {{ $activeSection === $key ? 'bg-neutral-950 text-cyan-500 font-semibold' : 'hover:bg-neutral-50 text-neutral-700' }}">
+                           class="block px-5 py-4 text-sm {{ $activeSection === $key ? 'bg-red-700 text-white font-semibold' : 'hover:bg-gray-50 text-gray-700' }}">
                             {{ $label }}
                         </a>
                     </li>
@@ -26,38 +26,45 @@
             </ul>
         </aside>
 
-        <div class="md:col-span-3 bg-white border border-neutral-200 p-8">
-            <h2 class="font-display text-xl font-bold text-neutral-900 mb-2">{{ $judulSection }}</h2>
-            <div class="w-12 h-px bg-cyan-500 mb-5"></div>
+        <div class="md:col-span-3 bg-white border border-neutral-200 p-8" 
+             x-data="{ show: false }" 
+             x-init="setTimeout(() => show = true, 100)"
+             x-show="show" 
+             x-transition:enter="transition ease-out duration-500"
+             x-transition:enter-start="opacity-0 translate-y-4"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             style="display: none;">
+            <h2 class="font-display text-2xl font-bold text-gray-900 mb-2">{{ $judulSection }}</h2>
+            <div class="w-16 h-1 bg-red-600 rounded-full mb-6"></div>
             
             @if($activeSection === 'sejarah')
-                <div class="text-neutral-600 leading-relaxed text-justify">
-                    <p class="first-letter:text-5xl first-letter:font-bold first-letter:text-cyan-600 first-letter:float-left first-letter:mr-3 first-letter:mt-1 leading-8">{{ $kontenSection }}</p>
+                <div class="text-gray-700 leading-relaxed text-justify text-lg">
+                    <p class="first-letter:text-6xl first-letter:font-bold first-letter:text-red-700 first-letter:float-left first-letter:mr-4 first-letter:mt-2 leading-relaxed">{{ $kontenSection }}</p>
                 </div>
 
             @elseif($activeSection === 'visi-misi')
-                <div class="prose max-w-none text-neutral-600">
+                <div class="prose max-w-none text-gray-700 text-lg">
                     {!! $kontenSection !!}
                 </div>
 
             @elseif($activeSection === 'sambutan')
-                <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex flex-col md:flex-row gap-8">
                     <div class="md:w-1/3">
-                        <img src="{{ $profil->foto_kepsek ? asset($profil->foto_kepsek) : asset('img/kepala-sekolah.jpg') }}" alt="Kepala Sekolah" class="w-full h-auto object-cover rounded-lg shadow-md border border-gray-200" onerror="this.src='https://placehold.co/400x500?text=Foto+Kepala+Sekolah'">
-                        <div class="mt-4 text-center">
-                            <h3 class="font-bold text-lg text-gray-800">{{ $profil->nama_kepsek ?? 'Nama Kepala Sekolah' }}</h3>
-                            <p class="text-sm text-cyan-600 font-semibold">Kepala SMK INFOKOM Kota Bogor</p>
+                        <img src="{{ $profil->foto_kepsek ? asset($profil->foto_kepsek) : asset('img/kepala-sekolah.jpg') }}" alt="Kepala Sekolah" class="w-full h-auto object-cover rounded-xl shadow-lg border-4 border-white" onerror="this.src='https://placehold.co/400x500?text=Foto+Kepala+Sekolah'">
+                        <div class="mt-6 text-center bg-gray-50 p-4 rounded-xl border border-gray-100">
+                            <h3 class="font-bold text-xl text-gray-900">{{ $profil->nama_kepsek ?? 'Nama Kepala Sekolah' }}</h3>
+                            <p class="text-sm text-red-600 font-bold mt-1">Kepala SMK INFOKOM Kota Bogor</p>
                         </div>
                     </div>
-                    <div class="md:w-2/3 text-neutral-600 leading-relaxed text-justify">
+                    <div class="md:w-2/3 text-gray-700 leading-relaxed text-justify text-lg">
                         <p>{!! nl2br(e($kontenSection)) !!}</p>
                     </div>
                 </div>
 
             @elseif($activeSection === 'struktur')
-                <div class="text-center mb-6">
-                    <p class="text-neutral-600 leading-relaxed mb-6">{{ $kontenSection }}</p>
-                    <img src="{{ $profil->foto_struktur ? asset($profil->foto_struktur) : asset('img/struktur-organisasi.jpg') }}" alt="Struktur Organisasi" class="mx-auto max-w-full h-auto rounded shadow-md border border-gray-200" onerror="this.src='https://placehold.co/800x600?text=Bagan+Struktur+Organisasi'">
+                <div class="text-center mb-8">
+                    <p class="text-gray-700 leading-relaxed mb-8 text-lg">{{ $kontenSection }}</p>
+                    <img src="{{ $profil->foto_struktur ? asset($profil->foto_struktur) : asset('img/struktur-organisasi.jpg') }}" alt="Struktur Organisasi" class="mx-auto max-w-full h-auto rounded-xl shadow-lg border border-gray-100" onerror="this.src='https://placehold.co/800x600?text=Bagan+Struktur+Organisasi'">
                 </div>
 
             @elseif($activeSection === 'fasilitas')
@@ -65,7 +72,7 @@
                     <p class="text-neutral-600 leading-relaxed mb-8">{{ $kontenSection }}</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         <!-- Fasilitas 1 -->
-                        <div @click="modalImg = '{{ asset('img/fasilitas-lab-rpl.jpg') }}'; modalTitle = 'Laboratorium Komputer'; modalDesc = 'Fasilitas praktikum dengan komputer spesifikasi tinggi untuk menunjang pembelajaran coding dan desain.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-cyan-500 transition">
+                        <div @click="modalImg = '{{ asset('img/fasilitas-lab-rpl.jpg') }}'; modalTitle = 'Laboratorium Komputer'; modalDesc = 'Fasilitas praktikum dengan komputer spesifikasi tinggi untuk menunjang pembelajaran coding dan desain.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-red-600 transition">
                             <img src="{{ asset('img/fasilitas-lab-rpl.jpg') }}" alt="Lab Komputer" class="w-full h-48 object-contain bg-gray-50 border-b" onerror="this.src='https://placehold.co/400x300?text=Lab+Komputer'">
                             <div class="p-4 bg-white">
                                 <h4 class="font-semibold text-gray-800">Laboratorium Komputer</h4>
@@ -73,7 +80,7 @@
                             </div>
                         </div>
                         <!-- Fasilitas 2 -->
-                        <div @click="modalImg = '{{ asset('img/fasilitas-lab-tkj.jpg') }}'; modalTitle = 'Laboratorium Jaringan'; modalDesc = 'Pusat praktikum perakitan dan konfigurasi jaringan server, router, dan fiber optic.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-cyan-500 transition">
+                        <div @click="modalImg = '{{ asset('img/fasilitas-lab-tkj.jpg') }}'; modalTitle = 'Laboratorium Jaringan'; modalDesc = 'Pusat praktikum perakitan dan konfigurasi jaringan server, router, dan fiber optic.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-red-600 transition">
                             <img src="{{ asset('img/fasilitas-lab-tkj.jpg') }}" alt="Lab Jaringan" class="w-full h-48 object-contain bg-gray-50 border-b" onerror="this.src='https://placehold.co/400x300?text=Lab+Jaringan'">
                             <div class="p-4 bg-white">
                                 <h4 class="font-semibold text-gray-800">Laboratorium Jaringan</h4>
@@ -81,7 +88,7 @@
                             </div>
                         </div>
                         <!-- Fasilitas 3 -->
-                        <div @click="modalImg = '{{ asset('img/fasilitas-studio.jpg') }}'; modalTitle = 'Studio Broadcasting'; modalDesc = 'Studio produksi televisi lengkap dengan kamera, pencahayaan, dan ruang kendali siaran.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-cyan-500 transition">
+                        <div @click="modalImg = '{{ asset('img/fasilitas-studio.jpg') }}'; modalTitle = 'Studio Broadcasting'; modalDesc = 'Studio produksi televisi lengkap dengan kamera, pencahayaan, dan ruang kendali siaran.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-red-600 transition">
                             <img src="{{ asset('img/fasilitas-studio.jpg') }}" alt="Studio TV" class="w-full h-48 object-contain bg-gray-50 border-b" onerror="this.src='https://placehold.co/400x300?text=Studio+Broadcasting'">
                             <div class="p-4 bg-white">
                                 <h4 class="font-semibold text-gray-800">Studio Broadcasting</h4>
@@ -89,7 +96,7 @@
                             </div>
                         </div>
                         <!-- Fasilitas 4 -->
-                        <div @click="modalImg = '{{ asset('img/fasilitas-perpustakaan.jpg') }}'; modalTitle = 'Perpustakaan'; modalDesc = 'Koleksi buku lengkap yang nyaman untuk belajar mandiri dan membaca referensi industri.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-cyan-500 transition">
+                        <div @click="modalImg = '{{ asset('img/fasilitas-perpustakaan.jpg') }}'; modalTitle = 'Perpustakaan'; modalDesc = 'Koleksi buku lengkap yang nyaman untuk belajar mandiri dan membaca referensi industri.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-red-600 transition">
                             <img src="{{ asset('img/fasilitas-perpustakaan.jpg') }}" alt="Perpustakaan" class="w-full h-48 object-contain bg-gray-50 border-b" onerror="this.src='https://placehold.co/400x300?text=Perpustakaan'">
                             <div class="p-4 bg-white">
                                 <h4 class="font-semibold text-gray-800">Perpustakaan</h4>
@@ -97,7 +104,7 @@
                             </div>
                         </div>
                         <!-- Fasilitas 5 -->
-                        <div @click="modalImg = '{{ asset('img/fasilitas-lapangan.jpg') }}'; modalTitle = 'Lapangan Olahraga'; modalDesc = 'Area olahraga multifungsi untuk kegiatan jasmani siswa dan ekstrakurikuler.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-cyan-500 transition">
+                        <div @click="modalImg = '{{ asset('img/fasilitas-lapangan.jpg') }}'; modalTitle = 'Lapangan Olahraga'; modalDesc = 'Area olahraga multifungsi untuk kegiatan jasmani siswa dan ekstrakurikuler.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-red-600 transition">
                             <img src="{{ asset('img/fasilitas-lapangan.jpg') }}" alt="Lapangan Olahraga" class="w-full h-48 object-contain bg-gray-50 border-b" onerror="this.src='https://placehold.co/400x300?text=Lapangan+Olahraga'">
                             <div class="p-4 bg-white">
                                 <h4 class="font-semibold text-gray-800">Lapangan Olahraga</h4>
@@ -105,7 +112,7 @@
                             </div>
                         </div>
                         <!-- Fasilitas 6 -->
-                        <div @click="modalImg = '{{ asset('img/fasilitas-aula.jpg') }}'; modalTitle = 'Aula Serbaguna'; modalDesc = 'Ruangan luas untuk pertemuan, seminar, dan acara besar sekolah.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-cyan-500 transition">
+                        <div @click="modalImg = '{{ asset('img/fasilitas-aula.jpg') }}'; modalTitle = 'Aula Serbaguna'; modalDesc = 'Ruangan luas untuk pertemuan, seminar, dan acara besar sekolah.'; modalOpen = true" class="cursor-pointer border rounded-lg overflow-hidden shadow-sm hover:shadow-md hover:border-red-600 transition">
                             <img src="{{ asset('img/fasilitas-aula.jpg') }}" alt="Aula" class="w-full h-48 object-contain bg-gray-50 border-b" onerror="this.src='https://placehold.co/400x300?text=Aula+Serbaguna'">
                             <div class="p-4 bg-white">
                                 <h4 class="font-semibold text-gray-800">Aula Serbaguna</h4>

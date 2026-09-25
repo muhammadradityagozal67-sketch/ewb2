@@ -100,7 +100,7 @@
                     berintegritas, kompetitif, dan siap melanjutkan pendidikan tinggi maupun berkarya di
                     tengah masyarakat. Didukung tenaga pendidik profesional dan fasilitas lengkap.
                 </p>
-                <a href="{{ route('profil') }}" class="inline-flex items-center gap-2 bg-red-700 text-white px-8 py-4 text-sm tracking-wide uppercase font-bold hover:bg-red-800 transition-colors duration-300 rounded-xl shadow-lg hover:shadow-red-500/30">
+                <a href="{{ route('profil') }}" class="inline-flex items-center gap-2 bg-red-700 text-white px-8 py-4 text-sm tracking-wide uppercase font-bold hover:bg-red-800 transition-all duration-300 rounded-xl shadow-lg hover:shadow-red-500/40 transform hover:-translate-y-1 hover:scale-105">
                     Selengkapnya <i class="fa fa-arrow-right"></i>
                 </a>
 
