@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'SMK INFOKOM Kota Bogor')</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=typography,forms"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -64,6 +64,17 @@
                     </div>
                 </div>
 
+                {{-- Program Unggulan Dropdown --}}
+                <div class="relative nav-dropdown">
+                    <button class="px-3 py-2 rounded hover:bg-red-50 hover:text-red-700 transition {{ request()->is('program*') ? 'text-red-700 font-semibold' : 'text-gray-700' }} flex items-center gap-1">
+                        Program <i class="fa fa-chevron-down text-xs"></i>
+                    </button>
+                    <div class="dropdown-menu absolute top-full left-0 bg-white shadow-lg rounded-lg w-56 py-2 border border-gray-100 z-50">
+                        <a href="{{ route('program.magang-jepang') }}" class="block px-4 py-2 text-sm hover:bg-red-50 hover:text-red-700"><i class="fa fa-plane-departure w-5"></i> Kerja Magang Jepang</a>
+                        <a href="{{ route('program.pkl') }}" class="block px-4 py-2 text-sm hover:bg-red-50 hover:text-red-700"><i class="fa fa-briefcase w-5"></i> Praktek Kerja Lapangan (PKL)</a>
+                    </div>
+                </div>
+
                 <a href="{{ route('berita.index') }}" class="px-3 py-2 rounded hover:bg-red-50 hover:text-red-700 transition {{ request()->routeIs('berita*') ? 'text-red-700 font-semibold' : 'text-gray-700' }}">Berita</a>
                 <a href="{{ route('galeri.index') }}" class="px-3 py-2 rounded hover:bg-red-50 hover:text-red-700 transition {{ request()->routeIs('galeri*') ? 'text-red-700 font-semibold' : 'text-gray-700' }}">Galeri</a>
                 <a href="{{ route('ppdb.index') }}" class="px-3 py-2 rounded hover:bg-red-50 hover:text-red-700 transition {{ request()->routeIs('ppdb*') ? 'text-red-700 font-semibold' : 'text-gray-700' }}">PPDB</a>
@@ -86,6 +97,8 @@
             <a href="{{ route('home') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">Beranda</a>
             <a href="{{ route('profil') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">Profil</a>
             <a href="{{ route('profil.section', 'jurusan') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">Program Keahlian</a>
+            <a href="{{ route('program.magang-jepang') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">Kerja Magang Jepang</a>
+            <a href="{{ route('program.pkl') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">Praktek Kerja Lapangan (PKL)</a>
             <a href="{{ route('berita.index') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">Berita</a>
             <a href="{{ route('galeri.index') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">Galeri</a>
             <a href="{{ route('ppdb.index') }}" class="block py-2 text-sm border-b border-gray-100 hover:text-red-700">PPDB</a>

@@ -34,11 +34,17 @@
                 <button @click="tab = 'berita'" :class="{'bg-red-700 text-white': tab === 'berita', 'hover:bg-gray-800 text-gray-300': tab !== 'berita'}" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition">
                     <i class="fa fa-newspaper w-4 text-center"></i> Berita
                 </button>
+                <button @click="tab = 'informasi'" :class="{'bg-red-700 text-white': tab === 'informasi', 'hover:bg-gray-800 text-gray-300': tab !== 'informasi'}" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition">
+                    <i class="fa fa-bullhorn w-4 text-center"></i> Informasi & Prestasi
+                </button>
                 <button @click="tab = 'galeri'" :class="{'bg-red-700 text-white': tab === 'galeri', 'hover:bg-gray-800 text-gray-300': tab !== 'galeri'}" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition">
                     <i class="fa fa-images w-4 text-center"></i> Galeri
                 </button>
                 <button @click="tab = 'ppdb'" :class="{'bg-red-700 text-white': tab === 'ppdb', 'hover:bg-gray-800 text-gray-300': tab !== 'ppdb'}" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition">
                     <i class="fa fa-user-plus w-4 text-center"></i> PPDB
+                </button>
+                <button @click="tab = 'magang'" :class="{'bg-red-700 text-white': tab === 'magang', 'hover:bg-gray-800 text-gray-300': tab !== 'magang'}" class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition">
+                    <i class="fa fa-plane w-4 text-center"></i> Magang Jepang
                 </button>
                 <a href="{{ route('home') }}" target="_blank" class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-800 text-gray-300 hover:text-white text-sm transition">
                     <i class="fa fa-globe w-4 text-center"></i> Lihat Website
@@ -60,6 +66,15 @@
             @if(session('success'))
             <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
                 {{ session('success') }}
+            </div>
+            @endif
+            @if($errors->any())
+            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                <ul class="list-disc pl-5">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
             @endif
 
@@ -337,6 +352,84 @@
                 </div>
             </div>
 
+            {{-- TAB: INFORMASI & PRESTASI --}}
+            <div x-show="tab === 'informasi'" style="display: none;" x-data="{ showModal: false, editMode: false, form: {} }">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold">Kelola Informasi & Prestasi</h2>
+                        <button @click="showModal = true; editMode = false; form = {}" class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700">
+                            + Tambah Data
+                        </button>
+                    </div>
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b">
+                                <th class="p-3 text-left w-20">Gambar</th>
+                                <th class="p-3 text-left">Tanggal</th>
+                                <th class="p-3 text-left">Kategori</th>
+                                <th class="p-3 text-left">Judul</th>
+                                <th class="p-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($informasis as $inf)
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-3">
+                                    @if($inf->gambar)
+                                        <img src="{{ asset('images/informasi/' . $inf->gambar) }}" class="w-16 h-12 object-cover rounded border">
+                                    @else
+                                        <span class="text-xs text-gray-400">No image</span>
+                                    @endif
+                                </td>
+                                <td class="p-3">{{ \Carbon\Carbon::parse($inf->tanggal)->format('d M Y') }}</td>
+                                <td class="p-3"><span class="px-2 py-1 bg-cyan-100 text-cyan-800 rounded text-xs font-bold">{{ $inf->kategori }}</span></td>
+                                <td class="p-3 font-medium">{{ $inf->judul }}</td>
+                                <td class="p-3 text-center flex justify-center gap-2 items-center h-full pt-4">
+                                    <button @click="showModal = true; editMode = true; form = {{ json_encode($inf) }}; form.tanggal = '{{ \Carbon\Carbon::parse($inf->tanggal)->format('Y-m-d') }}'" class="text-blue-500 hover:text-blue-700"><i class="fa fa-edit"></i></button>
+                                    <form action="{{ route('admin.informasi.destroy', $inf->id) }}" method="POST" onsubmit="return confirm('Hapus data ini?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-700"><i class="fa fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                {{-- Modal Form Informasi --}}
+                <div x-show="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div class="bg-white rounded-xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
+                        <h3 class="text-lg font-bold mb-4" x-text="editMode ? 'Edit Data' : 'Tambah Data Baru'"></h3>
+                        <form :action="editMode ? '{{ url('admin/informasi') }}/' + form.id : '{{ route('admin.informasi.store') }}'" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="_method" :value="editMode ? 'PUT' : 'POST'">
+                            <div class="space-y-4 mb-6">
+                                <div><label class="block text-sm mb-1">Kategori</label>
+                                    <select name="kategori" x-model="form.kategori" required class="w-full border p-2 rounded">
+                                        <option value="Pengumuman">Pengumuman</option>
+                                        <option value="Agenda">Agenda</option>
+                                        <option value="Prestasi">Prestasi</option>
+                                        <option value="Galeri">Galeri</option>
+                                    </select>
+                                </div>
+                                <div><label class="block text-sm mb-1">Judul</label><input type="text" name="judul" x-model="form.judul" required class="w-full border p-2 rounded"></div>
+                                <div><label class="block text-sm mb-1">Tanggal</label><input type="date" name="tanggal" x-model="form.tanggal" required class="w-full border p-2 rounded"></div>
+                                <div>
+                                    <label class="block text-sm mb-1">Gambar (Upload File) <span class="text-xs text-gray-400" x-text="editMode ? '(Kosongkan jika tidak ingin diubah)' : ''"></span></label>
+                                    <input type="file" name="gambar" accept="image/*" class="w-full border p-2 rounded">
+                                </div>
+                                <div><label class="block text-sm mb-1">Konten / Isi Lengkap</label><textarea name="isi" x-model="form.isi" required class="w-full border p-2 rounded" rows="6"></textarea></div>
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button type="button" @click="showModal = false" class="px-4 py-2 border rounded-lg text-sm">Batal</button>
+                                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm">Simpan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             {{-- TAB: GALERI --}}
             <div x-show="tab === 'galeri'" style="display: none;" x-data="{ showModal: false, editMode: false, form: {} }">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -466,6 +559,55 @@
                             </div>
                         </form>
                     </div>
+                </div>
+            </div>
+            {{-- TAB: MAGANG --}}
+            <div x-show="tab === 'magang'" x-data="{ showModal: false, form: {} }">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800">Pendaftar Magang Jepang</h2>
+                        <p class="text-sm text-gray-500">Kelola data pendaftaran magang Jepang</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50 text-gray-600 font-medium border-b border-gray-100">
+                            <tr>
+                                <th class="p-3">No. Pendaftaran</th>
+                                <th class="p-3">Nama Lengkap</th>
+                                <th class="p-3">Asal Jurusan</th>
+                                <th class="p-3">No HP</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-50">
+                            @foreach($magangList ?? [] as $mgn)
+                            <tr class="hover:bg-gray-50/50 transition">
+                                <td class="p-3 font-bold text-red-600">{{ $mgn->no_pendaftaran }}</td>
+                                <td class="p-3 font-medium">{{ $mgn->nama_lengkap }}</td>
+                                <td class="p-3">{{ $mgn->asal_jurusan }}</td>
+                                <td class="p-3">{{ $mgn->no_hp }}</td>
+                                <td class="p-3">
+                                    <span class="px-2 py-1 text-xs font-bold rounded 
+                                        @if($mgn->status == 'Menunggu') bg-yellow-100 text-yellow-800 
+                                        @elseif($mgn->status == 'Diproses') bg-blue-100 text-blue-800 
+                                        @elseif($mgn->status == 'Diterima') bg-green-100 text-green-800 
+                                        @else bg-red-100 text-red-800 @endif">
+                                        {{ $mgn->status }}
+                                    </span>
+                                </td>
+                                <td class="p-3 text-center flex justify-center gap-2 items-center">
+                                    <form action="{{ route('admin.magang.destroy', $mgn->id) }}" method="POST" onsubmit="return confirm('Hapus pendaftar magang ini?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-700"><i class="fa fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

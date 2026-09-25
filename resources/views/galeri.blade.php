@@ -4,26 +4,26 @@
 
 @section('content')
 
-    <div class="bg-neutral-950 text-white py-14 border-b border-cyan-600/20">
+    <div class="bg-gray-900 text-white py-14 border-b border-red-600">
         <div class="max-w-7xl mx-auto px-6">
-            <h1 class="font-display text-3xl font-bold">Galeri Kegiatan</h1>
-            <p class="text-sm text-neutral-400 mt-2">Beranda / Galeri</p>
+            <h1 class="font-display text-4xl font-bold">Galeri Kegiatan</h1>
+            <p class="text-sm text-gray-300 mt-2">Beranda / Galeri</p>
         </div>
     </div>
 
     <div class="max-w-7xl mx-auto px-6 py-14" x-data="{ modalOpen: false, modalImg: '', modalTitle: '', modalKategori: '' }">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($galeriList as $galeri)
-                <div @click="modalImg = '{{ asset('images/galeri/'.$galeri->gambar) }}'; modalTitle = '{{ addslashes($galeri->judul) }}'; modalKategori = '{{ addslashes($galeri->kategori) }}'; modalOpen = true" class="cursor-pointer bg-white border border-neutral-200 overflow-hidden hover:border-cyan-500 hover:shadow-md transition">
+                <div @click="modalImg = '{{ asset('images/galeri/'.$galeri->gambar) }}'; modalTitle = '{{ addslashes($galeri->judul) }}'; modalKategori = '{{ addslashes($galeri->kategori) }}'; modalOpen = true" class="cursor-pointer overflow-hidden rounded-xl group relative aspect-video shadow-md border border-gray-100 hover:shadow-xl transition-shadow">
                     @if($galeri->gambar && file_exists(public_path('images/galeri/'.$galeri->gambar)))
-                        <img src="{{ asset('images/galeri/'.$galeri->gambar) }}" alt="{{ $galeri->judul }}" class="h-48 w-full object-contain bg-gray-50 border-b">
+                        <img src="{{ asset('images/galeri/'.$galeri->gambar) }}" alt="{{ $galeri->judul }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <p class="text-white font-bold text-lg drop-shadow-md truncate">{{ $galeri->judul }}</p>
+                            <p class="text-red-400 font-medium text-sm mt-1 drop-shadow-sm">{{ $galeri->kategori }}</p>
+                        </div>
                     @else
-                        <div class="h-48 bg-neutral-200 flex items-center justify-center text-neutral-400 text-sm">Foto</div>
+                        <div class="h-full w-full bg-gray-100 flex items-center justify-center text-gray-400 text-sm">Foto</div>
                     @endif
-                    <div class="p-4">
-                        <p class="text-sm font-medium text-neutral-900 truncate">{{ $galeri->judul }}</p>
-                        <p class="text-xs text-cyan-600 uppercase tracking-wide mt-1">{{ $galeri->kategori }}</p>
-                    </div>
                 </div>
             @endforeach
         </div>

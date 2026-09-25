@@ -17,8 +17,16 @@ use App\Http\Controllers\GuruController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/profil/{section}', [ProfilController::class, 'index'])->name('profil.section');
+
+// Program Unggulan
+Route::get('/program/magang-jepang', [\App\Http\Controllers\ProgramController::class, 'magangJepang'])->name('program.magang-jepang');
+Route::get('/program/magang-jepang/daftar', [\App\Http\Controllers\ProgramController::class, 'daftarMagang'])->name('program.magang.daftar');
+Route::post('/program/magang-jepang/daftar', [\App\Http\Controllers\ProgramController::class, 'storeMagang'])->name('program.magang.store');
+Route::get('/program/pkl', [\App\Http\Controllers\ProgramController::class, 'pkl'])->name('program.pkl');
+
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('berita.show');
+Route::get('/informasi/{informasi:slug}', [\App\Http\Controllers\InformasiController::class, 'show'])->name('informasi.show');
 Route::get('/galeri', [GaleriController::class, 'index'])->name('galeri.index');
 Route::get('/ppdb', [PpdbController::class, 'index'])->name('ppdb.index');
 Route::post('/ppdb/daftar', [PpdbController::class, 'store'])->name('ppdb.daftar.post');
@@ -56,6 +64,11 @@ Route::middleware('role:admin')->prefix('admin')->group(function () {
     Route::put('/galeri/{id}', [AdminController::class, 'updateGaleri'])->name('admin.galeri.update');
     Route::delete('/galeri/{id}', [AdminController::class, 'destroyGaleri'])->name('admin.galeri.destroy');
 
+    // Informasi CRUD
+    Route::post('/informasi', [AdminController::class, 'storeInformasi'])->name('admin.informasi.store');
+    Route::put('/informasi/{id}', [AdminController::class, 'updateInformasi'])->name('admin.informasi.update');
+    Route::delete('/informasi/{id}', [AdminController::class, 'destroyInformasi'])->name('admin.informasi.destroy');
+
     // Profil Update
     Route::post('/profil', [AdminController::class, 'updateProfil'])->name('admin.profil.update');
 
@@ -68,6 +81,9 @@ Route::middleware('role:admin')->prefix('admin')->group(function () {
     Route::get('/ppdb-pendaftar', [AdminController::class, 'ppdbIndex'])->name('admin.ppdb.index');
     Route::patch('/ppdb-pendaftar/{id}/status', [AdminController::class, 'updatePpdbStatus'])->name('admin.ppdb.updateStatus');
     Route::delete('/ppdb-pendaftar/{id}', [AdminController::class, 'destroyPpdb'])->name('admin.ppdb.destroy');
+
+    // Magang Management
+    Route::delete('/magang-pendaftar/{id}', [AdminController::class, 'destroyMagang'])->name('admin.magang.destroy');
 });
 
 // ===================== PORTAL ORANG TUA =====================

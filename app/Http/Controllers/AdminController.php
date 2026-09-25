@@ -28,10 +28,12 @@ class AdminController extends Controller
         
         $profil         = \App\Models\Profil::first();
         $jurusans       = \App\Models\Jurusan::all();
+        $informasis     = \App\Models\Informasi::orderBy('tanggal', 'desc')->get();
+        $magangList     = \App\Models\PendaftaranMagang::latest()->get();
 
         return view('admin.dashboard', compact(
             'totalGuru', 'totalSiswa', 'totalBerita', 'totalPengunjung', 'totalPpdb',
-            'gurus', 'beritas', 'galeris', 'ppdbList', 'profil', 'jurusans'
+            'gurus', 'beritas', 'galeris', 'ppdbList', 'profil', 'jurusans', 'informasis', 'magangList'
         ));
     }
 
@@ -206,6 +208,64 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard', ['tab' => 'galeri'])->with('success', 'Foto galeri berhasil dihapus.');
     }
 
+    // ======================== INFORMASI ========================
+    public function storeInformasi(Request $request)
+    {
+        $request->validate([
+            'judul'     => 'required|string|max:255',
+            'kategori'  => 'required|string|max:100',
+            'isi'       => 'required|string',
+            'tanggal'   => 'required|date',
+            'gambar'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        
+        $data = $request->only('judul', 'kategori', 'isi', 'tanggal');
+        $data['slug'] = Str::slug($request->judul) . '-' . time();
+        
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_informasi.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/informasi'), $filename);
+            $data['gambar'] = $filename;
+        }
+
+        \App\Models\Informasi::create($data);
+        return redirect()->route('admin.dashboard', ['tab' => 'informasi'])->with('success', 'Informasi berhasil ditambahkan.');
+    }
+
+    public function updateInformasi(Request $request, $id)
+    {
+        $request->validate([
+            'judul'     => 'required|string|max:255',
+            'kategori'  => 'required|string|max:100',
+            'isi'       => 'required|string',
+            'tanggal'   => 'required|date',
+            'gambar'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+        
+        $informasi = \App\Models\Informasi::findOrFail($id);
+        $data = $request->only('judul', 'kategori', 'isi', 'tanggal');
+        
+        if ($request->hasFile('gambar')) {
+            if ($informasi->gambar && file_exists(public_path('images/informasi/' . $informasi->gambar))) {
+                unlink(public_path('images/informasi/' . $informasi->gambar));
+            }
+            $file = $request->file('gambar');
+            $filename = time() . '_informasi.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/informasi'), $filename);
+            $data['gambar'] = $filename;
+        }
+
+        $informasi->update($data);
+        return redirect()->route('admin.dashboard', ['tab' => 'informasi'])->with('success', 'Informasi berhasil diperbarui.');
+    }
+
+    public function destroyInformasi($id)
+    {
+        \App\Models\Informasi::findOrFail($id)->delete();
+        return redirect()->route('admin.dashboard', ['tab' => 'informasi'])->with('success', 'Informasi berhasil dihapus.');
+    }
+
     // ======================== PPDB MANAGEMENT ========================
     public function ppdbIndex()
     {
@@ -228,6 +288,12 @@ class AdminController extends Controller
     {
         PpdbPendaftar::findOrFail($id)->delete();
         return redirect()->route('admin.dashboard', ['tab' => 'ppdb'])->with('success', 'Data pendaftar berhasil dihapus.');
+    }
+
+    public function destroyMagang($id)
+    {
+        \App\Models\PendaftaranMagang::findOrFail($id)->delete();
+        return redirect()->route('admin.dashboard', ['tab' => 'magang'])->with('success', 'Data pendaftar magang berhasil dihapus.');
     }
 
     // ======================== PROFIL ========================
